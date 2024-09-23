@@ -4,86 +4,117 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
-export default function FormCadCliente() {
+export default function FormCadCliente(props) {
+    const [cliente, setCliente] = useState({
+        nome: "",
+        cpf: "",
+        endereco: "",
+        cep: "",
+        telefone: "",
+        email: ""
+    });
+
     const [validated, setValidated] = useState(false);
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
+        if (form.checkValidity()) {
+            if (props.modoAlterar) {
+                // Alterar cliente
+                props.setListaDeClientes(
+                    props.listaClientes.map(item => 
+                        item.cpf !== props.clienteSelecionado.cpf ? item : cliente
+                    )
+                );
+                props.setModoAlterar(false);
+            } else {
+                // Cadastrar cliente
+                props.setListaDeClientes([...props.listaClientes, cliente]);
+            }
+            props.setExibirTabela(true);
+        } else {
+            setValidated(true);
         }
+        event.preventDefault();
+        event.stopPropagation();
+    };
 
-        setValidated(true);
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setCliente({ ...cliente, [name]: value });
     };
 
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Row className="mb-3">
-                <Form.Group as={Col} md="6" controlId="validationCustom01">
+                <Form.Group as={Col} md="6">
                     <Form.Label>Nome</Form.Label>
                     <Form.Control
                         required
                         type="text"
-                        placeholder="Digite o seu nome"
+                        name="nome"
+                        value={props.modoAlterar ? props.clienteSelecionado.nome : cliente.nome}
+                        onChange={handleChange}
                     />
-                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group as={Col} md="6" controlId="validationCustom02">
+                <Form.Group as={Col} md="6">
                     <Form.Label>CPF</Form.Label>
                     <Form.Control
                         required
                         type="text"
-                        placeholder="Insira o seu CPF"
+                        name="cpf"
+                        value={props.modoAlterar ? props.clienteSelecionado.cpf : cliente.cpf}
+                        onChange={handleChange}
+                        disabled={props.modoAlterar}
                     />
-                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 </Form.Group>
             </Row>
             <Row className="mb-3">
-                <Form.Group as={Col} md="8" controlId="validationCustom01">
+                <Form.Group as={Col} md="6">
                     <Form.Label>Endereço</Form.Label>
                     <Form.Control
                         required
                         type="text"
-                        placeholder="Digite o seu endereco (Rua, Número)"
+                        name="endereco"
+                        value={props.modoAlterar ? props.clienteSelecionado.endereco : cliente.endereco}
+                        onChange={handleChange}
                     />
-                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group as={Col} md="4" controlId="validationCustom01">
+                <Form.Group as={Col} md="6">
                     <Form.Label>CEP</Form.Label>
                     <Form.Control
                         required
                         type="text"
-                        placeholder="Digite o seu CEP"
+                        name="cep"
+                        value={props.modoAlterar ? props.clienteSelecionado.cep : cliente.cep}
+                        onChange={handleChange}
                     />
-                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 </Form.Group>
             </Row>
             <Row className="mb-3">
-                <Form.Group as={Col} md="3" controlId="validationCustom03">
+                <Form.Group as={Col} md="6">
                     <Form.Label>Telefone</Form.Label>
-                    <Form.Control type="text" placeholder="(xx)xxxxx-xxxx" required />
-                    <Form.Control.Feedback type="invalid">
-                        Please provide a valid city.
-                    </Form.Control.Feedback>
+                    <Form.Control
+                        required
+                        type="text"
+                        name="telefone"
+                        value={props.modoAlterar ? props.clienteSelecionado.telefone : cliente.telefone}
+                        onChange={handleChange}
+                    />
                 </Form.Group>
-                <Form.Group as={Col} md="9" controlId="validationCustom04">
+                <Form.Group as={Col} md="6">
                     <Form.Label>Email</Form.Label>
-                    <Form.Control type="text" placeholder="email@email.com" required />
-                    <Form.Control.Feedback type="invalid">
-                        Please provide a valid state.
-                    </Form.Control.Feedback>
+                    <Form.Control
+                        required
+                        type="email"
+                        name="email"
+                        value={props.modoAlterar ? props.clienteSelecionado.email : cliente.email}
+                        onChange={handleChange}
+                    />
                 </Form.Group>
             </Row>
-            <Form.Group className="mb-3">
-                <Form.Check
-                    required
-                    label="Aceito os termos e condições"
-                    feedback="You must agree before submitting."
-                    feedbackType="invalid"
-                />
-            </Form.Group>
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit">{props.modoAlterar ? 'Alterar' : 'Cadastrar'}</Button>
+            <Button onClick={() => { props.setExibirTabela(true); }}>Voltar</Button>
         </Form>
-    )
+    );
 }
