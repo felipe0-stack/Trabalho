@@ -6,7 +6,7 @@ import TabelaClientes from "./Tabelas/TabelaCliente";
 
 export default function TelaCadastroCliente(props) {
     const [exibirTabela, setExibirTabela] = useState(true);
-    const [listaDeClientes, setListaDeClientes] = useState([]);
+    const [listaDeClientes, setListaDeClientes] = useState([]); // Lista de clientes
     const [modoAlterar, setModoAlterar] = useState(false);
     const [clienteSelecionado, setClienteSelecionado] = useState({
         nome: "",
@@ -20,26 +20,24 @@ export default function TelaCadastroCliente(props) {
     return (
         <Pagina>
             <Alert className="text-center" variant="success">
-                <h2 className="text-center">Tela de Cadastro de Clientes</h2>
+                <h2 className="text-center">Tela de cadastro de Clientes</h2>
             </Alert>
-            {
-                exibirTabela ? 
+            {exibirTabela ? 
                 <TabelaClientes 
-                    listaClientes={listaDeClientes} 
-                    setListaDeClientes={setListaDeClientes} 
-                    setExibirTabela={setExibirTabela} 
+                    listaClientes={listaDeClientes}
+                    setListaDeClientes={setListaDeClientes}
+                    setExibirTabela={setExibirTabela}
                     setModoAlterar={setModoAlterar}
-                    modoAlterar={modoAlterar} 
-                    setClienteSelecionado={setClienteSelecionado} 
+                    setClienteSelecionado={setClienteSelecionado}
                 /> :
                 <FormCadCliente 
-                    listaClientes={listaDeClientes} 
+                    listaClientes={listaDeClientes}
                     setListaDeClientes={setListaDeClientes}
-                    setExibirTabela={setExibirTabela} 
+                    setExibirTabela={setExibirTabela}
+                    modoAlterar={modoAlterar}
                     setModoAlterar={setModoAlterar}
-                    modoAlterar={modoAlterar} 
-                    setClienteSelecionado={setClienteSelecionado} 
-                    clienteSelecionado={clienteSelecionado} 
+                    clienteSelecionado={clienteSelecionado}
+                    setClienteSelecionado={setClienteSelecionado}
                 />
             }
         </Pagina>
